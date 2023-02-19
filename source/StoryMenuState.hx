@@ -51,6 +51,7 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
+
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
@@ -187,7 +188,6 @@ class StoryMenuState extends MusicBeatState
 
                 #if android
                 addVirtualPad(FULL, A_B_X_Y);
-                addPadCamera();
                 #end
 
 		super.create();
@@ -223,6 +223,13 @@ class StoryMenuState extends MusicBeatState
 			{
 				changeWeek(1);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
+			}
+
+			if(FlxG.mouse.wheel != 0)
+			{
+				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+				changeWeek(-FlxG.mouse.wheel);
+				changeDifficulty();
 			}
 
 			if (controls.UI_RIGHT)
@@ -295,8 +302,13 @@ class StoryMenuState extends MusicBeatState
 
 				grpWeekText.members[curWeek].startFlashing();
 
-				var bf:MenuCharacter = grpWeekCharacters.members[1];
-				if(bf.character != '' && bf.hasConfirmAnimation) grpWeekCharacters.members[1].animation.play('confirm');
+				for (char in grpWeekCharacters.members)
+				{
+					if (char.character != '' && char.hasConfirmAnimation)
+					{
+						char.animation.play('confirm');
+					}
+				}
 				stopspamming = true;
 			}
 
